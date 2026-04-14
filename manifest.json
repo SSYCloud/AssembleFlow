@@ -1,0 +1,27 @@
+{
+  "name": "batchjob-agent-kit",
+  "description": "Public distribution manifest for batchjob CLI and agent skills for 批处理, 批量模板提交, Excel 模板执行, and 结果回填 workflows",
+  "version": "0.1.0-mvp",
+  "cli": {
+    "name": "batchjob-cli",
+    "scope": [
+      "doctor",
+      "input-asset.upload",
+      "model.list",
+      "model.get",
+      "template.list",
+      "template.schema",
+      "template.download",
+      "template.validate-file",
+      "template.submit-file",
+      "run.submit",
+      "run.watch",
+      "artifact.list",
+      "artifact.download"
+    ]
+  },
+  "skills": [
+    "codex/batchjob",
+    "claude/batchjob"
+  ]
+}
