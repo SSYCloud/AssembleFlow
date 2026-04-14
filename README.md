@@ -42,7 +42,7 @@ export BATCHJOB_TOKEN="your-token"
 curl -fsSL https://raw.githubusercontent.com/SSYCloud/AssembleFlow/main/install.sh | bash
 ```
 
-By default the installer downloads the latest release, installs `batchjob-cli` into `~/.local/bin`, and installs the Codex skill into `~/.codex/skills/batchjob/SKILL.md`.
+By default the installer downloads the latest release, installs `batchjob-cli` into `~/.local/bin`, and installs the Codex skill into `~/.codex/skills/assemble-flow/SKILL.md`.
 
 On macOS/Linux, if `brew` is available, the installer prefers Homebrew for the CLI and still installs the matching skill pack. Use `--no-brew` if you want the release binary path instead.
 

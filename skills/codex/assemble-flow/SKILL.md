@@ -1,9 +1,9 @@
 ---
-name: batchjob
+name: assemble-flow
 description: Use batchjob-cli when the user mentions 批处理, 批量处理, 模板提交, Excel 模板批量执行, run submit, or artifact/result backfill workflows.
 ---
 
-# batchjob
+# assemble-flow
 
 Use this skill when the user is referring to our hosted batch-processing workflow through `batchjob-cli`, even if they only say things like “批处理”, “批量处理”, “批量跑一下”, “提交 Excel 模板”, “回填结果”, or “下载批量产物” without naming BatchJob explicitly.
 

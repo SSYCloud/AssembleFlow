@@ -82,10 +82,10 @@ resolve_skill_dir() {
   fi
   case "$AGENT" in
     codex)
-      printf '%s\n' "$HOME/.codex/skills/batchjob"
+      printf '%s\n' "$HOME/.codex/skills/assemble-flow"
       ;;
     claude)
-      printf '%s\n' "$HOME/.claude/skills/batchjob"
+      printf '%s\n' "$HOME/.claude/skills/assemble-flow"
       ;;
     *)
       echo "unsupported agent for automatic skill install: $AGENT" >&2
@@ -220,7 +220,7 @@ mkdir -p "$TMP_DIR/skills"
 tar -xzf "$TMP_DIR/$SKILL_ASSET" -C "$TMP_DIR/skills"
 FINAL_SKILL_DIR="$(resolve_skill_dir)"
 mkdir -p "$FINAL_SKILL_DIR"
-install -m 0644 "$TMP_DIR/skills/skills/$AGENT/batchjob/SKILL.md" "$FINAL_SKILL_DIR/SKILL.md"
+install -m 0644 "$TMP_DIR/skills/skills/$AGENT/assemble-flow/SKILL.md" "$FINAL_SKILL_DIR/SKILL.md"
 
 echo "installed:"
 echo "  $CLI_PATH"

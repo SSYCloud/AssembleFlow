@@ -14,8 +14,8 @@ function Resolve-SkillDir {
   param([string]$AgentName, [string]$Override)
   if ($Override) { return $Override }
   switch ($AgentName) {
-    "codex" { return "$HOME\.codex\skills\batchjob" }
-    "claude" { return "$HOME\.claude\skills\batchjob" }
+    "codex" { return "$HOME\.codex\skills\assemble-flow" }
+    "claude" { return "$HOME\.claude\skills\assemble-flow" }
     default { throw "unsupported agent: $AgentName" }
   }
 }
@@ -97,7 +97,7 @@ try {
   Expand-Archive -LiteralPath $skillsZip -DestinationPath $skillsExtract -Force
   $finalSkillDir = Resolve-SkillDir -AgentName $Agent -Override $SkillDir
   New-Item -ItemType Directory -Force -Path $finalSkillDir | Out-Null
-  Copy-Item -LiteralPath (Join-Path $skillsExtract "skills\$Agent\batchjob\SKILL.md") -Destination (Join-Path $finalSkillDir "SKILL.md") -Force
+  Copy-Item -LiteralPath (Join-Path $skillsExtract "skills\$Agent\assemble-flow\SKILL.md") -Destination (Join-Path $finalSkillDir "SKILL.md") -Force
 
   Write-Host "installed:"
   Write-Host "  $(Join-Path $InstallDir 'batchjob-cli.exe')"

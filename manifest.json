@@ -21,7 +21,7 @@
     ]
   },
   "skills": [
-    "codex/batchjob",
-    "claude/batchjob"
+    "codex/assemble-flow",
+    "claude/assemble-flow"
   ]
 }

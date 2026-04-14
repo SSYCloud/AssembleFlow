@@ -12,8 +12,8 @@ function Resolve-SkillDir {
   param([string]$AgentName, [string]$Override)
   if ($Override) { return $Override }
   switch ($AgentName) {
-    "codex" { return "$HOME\.codex\skills\batchjob" }
-    "claude" { return "$HOME\.claude\skills\batchjob" }
+    "codex" { return "$HOME\.codex\skills\assemble-flow" }
+    "claude" { return "$HOME\.claude\skills\assemble-flow" }
     default { throw "unsupported agent: $AgentName" }
   }
 }

@@ -63,10 +63,10 @@ resolve_skill_dir() {
   fi
   case "$AGENT" in
     codex)
-      printf '%s\n' "$HOME/.codex/skills/batchjob"
+      printf '%s\n' "$HOME/.codex/skills/assemble-flow"
       ;;
     claude)
-      printf '%s\n' "$HOME/.claude/skills/batchjob"
+      printf '%s\n' "$HOME/.claude/skills/assemble-flow"
       ;;
     *)
       echo "unsupported agent for automatic skill uninstall: $AGENT" >&2
