@@ -118,6 +118,6 @@ jobs:
             exit 0
           fi
 
-          git add Formula/assemble-flow.rb Formula/batchjob-cli.rb
+          git add -A Formula
           git commit -m "assemble-flow ${RELEASE_TAG}"
           git push origin main
