@@ -1,11 +1,11 @@
 ---
 name: assemble-flow
-description: Use batchjob-cli when the user mentions 批处理, 批量处理, 模板提交, Excel 模板批量执行, run submit, or artifact/result backfill workflows.
+description: Use assemble-flow when the user mentions 批处理, 批量处理, 模板提交, Excel 模板批量执行, run submit, or artifact/result backfill workflows.
 ---
 
 # assemble-flow
 
-Use this skill when the user is referring to our AssembleFlow-hosted batch-processing workflow through `batchjob-cli`, even if they only say things like “批处理”, “批量处理”, “批量跑一下”, “提交 Excel 模板”, “回填结果”, or “下载批量产物” without naming AssembleFlow explicitly.
+Use this skill when the user is referring to our AssembleFlow-hosted batch-processing workflow through `assemble-flow`, even if they only say things like “批处理”, “批量处理”, “批量跑一下”, “提交 Excel 模板”, “回填结果”, or “下载批量产物” without naming AssembleFlow explicitly.
 
 ## When To Use
 
@@ -24,29 +24,29 @@ Use this skill when the user is referring to our AssembleFlow-hosted batch-proce
 ## Command Pattern
 
 1. Check environment:
-   `batchjob-cli doctor`
+   `assemble-flow doctor`
 2. Upload reusable raw input files when the local file is large and should not be pasted into agent context:
-   `batchjob-cli input-asset upload <file>`
+   `assemble-flow input-asset upload <file>`
 3. Discover executable models when step-level model choice matters:
-   `batchjob-cli model list --step-type image-generate`
-   `batchjob-cli model get <model-id>`
+   `assemble-flow model list --step-type image-generate`
+   `assemble-flow model get <model-id>`
 4. Discover available templates:
-   `batchjob-cli template list`
+   `assemble-flow template list`
 5. Inspect one template:
-   `batchjob-cli template schema <template-id>`
+   `assemble-flow template schema <template-id>`
 6. Default to the official Excel workflow:
-   `batchjob-cli template download <template-id>`
-   `batchjob-cli template validate-file <template-id> <xlsx-path>`
-   `batchjob-cli template submit-file <template-id> <xlsx-path>`
-   `batchjob-cli template backfill-results <run-id> <xlsx-path>`
+   `assemble-flow template download <template-id>`
+   `assemble-flow template validate-file <template-id> <xlsx-path>`
+   `assemble-flow template submit-file <template-id> <xlsx-path>`
+   `assemble-flow template backfill-results <run-id> <xlsx-path>`
 7. Use JSON/JSONL only when the user explicitly wants a programmatic non-Excel path.
 8. Submit a JSON/JSONL run:
-   `batchjob-cli run submit <template-id> -f rows.jsonl`
+   `assemble-flow run submit <template-id> -f rows.jsonl`
 9. Watch the run:
-   `batchjob-cli run watch <run-id>`
+   `assemble-flow run watch <run-id>`
 10. List or download artifacts:
-   `batchjob-cli artifact list <run-id>`
-   `batchjob-cli artifact download <run-id>`
+   `assemble-flow artifact list <run-id>`
+   `assemble-flow artifact download <run-id>`
 
 ## Confirmation Rule
 
@@ -73,8 +73,8 @@ Treat the interaction as a simple three-state flow:
 
 This applies to:
 
-- `batchjob-cli template submit-file <template-id> <xlsx-path>`
-- `batchjob-cli run submit <template-id> -f rows.jsonl`
+- `assemble-flow template submit-file <template-id> <xlsx-path>`
+- `assemble-flow run submit <template-id> -f rows.jsonl`
 
 Do not silently submit just because the user asked for exploration, validation,
 schema inspection, or preparation steps. Validation, download, schema inspection,
@@ -102,7 +102,7 @@ stay in preparation mode and do not execute.
 
 If a command fails, first run:
 
-`batchjob-cli doctor`
+`assemble-flow doctor`
 
 Use that result to quickly decide whether the problem is:
 
@@ -116,27 +116,27 @@ Do this before guessing template, model, or run-level causes.
 
 The public CLI MVP currently supports:
 
-- `batchjob-cli doctor`
-- `batchjob-cli input-asset upload <file>`
-- `batchjob-cli model list --step-type <step-type>`
-- `batchjob-cli model get <model-id>`
-- `batchjob-cli template list`
-- `batchjob-cli template schema <template-id>`
-- `batchjob-cli template download <template-id>`
-- `batchjob-cli template backfill-results <run-id> <xlsx-path>`
-- `batchjob-cli template validate-file <template-id> <xlsx-path>`
-- `batchjob-cli template submit-file <template-id> <xlsx-path>`
-- `batchjob-cli run submit <template-id> -f rows.jsonl`
-- `batchjob-cli run watch <run-id>`
-- `batchjob-cli artifact list <run-id>`
-- `batchjob-cli artifact download <run-id>`
+- `assemble-flow doctor`
+- `assemble-flow input-asset upload <file>`
+- `assemble-flow model list --step-type <step-type>`
+- `assemble-flow model get <model-id>`
+- `assemble-flow template list`
+- `assemble-flow template schema <template-id>`
+- `assemble-flow template download <template-id>`
+- `assemble-flow template backfill-results <run-id> <xlsx-path>`
+- `assemble-flow template validate-file <template-id> <xlsx-path>`
+- `assemble-flow template submit-file <template-id> <xlsx-path>`
+- `assemble-flow run submit <template-id> -f rows.jsonl`
+- `assemble-flow run watch <run-id>`
+- `assemble-flow artifact list <run-id>`
+- `assemble-flow artifact download <run-id>`
 
 ## Large Local Files
 
 If the user wants to batch-process local code files, large text files, or local images,
 do not paste those files into the agent context when avoidable. Prefer:
 
-1. `batchjob-cli input-asset upload <file>`
+1. `assemble-flow input-asset upload <file>`
 2. keep the returned `input_asset_id`
 3. continue preparing the structured JSONL / Excel input in smaller steps
 
@@ -150,8 +150,8 @@ Excel template workflow.
 
 When using:
 
-- `batchjob-cli template submit-file <template-id> <xlsx-path>`
-- `batchjob-cli template backfill-results <run-id> <xlsx-path>`
+- `assemble-flow template submit-file <template-id> <xlsx-path>`
+- `assemble-flow template backfill-results <run-id> <xlsx-path>`
 
 assume the workbook itself is the source of truth. By default, `template backfill-results`
 writes results back into the same workbook path. Only use `--output-file` when the

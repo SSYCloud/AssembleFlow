@@ -72,7 +72,7 @@ func fetchLatestVersion(ctx context.Context, apiURL string) (string, error) {
 		return "", err
 	}
 	req.Header.Set("Accept", "application/vnd.github+json")
-	req.Header.Set("User-Agent", "batchjob-cli/"+strings.TrimSpace(Version))
+	req.Header.Set("User-Agent", "assemble-flow/"+strings.TrimSpace(Version))
 
 	httpClient := &http.Client{Timeout: defaultHTTPTimeout}
 	resp, err := httpClient.Do(req)

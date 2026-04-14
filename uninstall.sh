@@ -13,7 +13,7 @@ Usage: uninstall.sh [options]
 
 Options:
   --agent <codex|claude>   Remove the matching skill pack (default: codex)
-  --install-dir <path>     Directory containing batchjob-cli (default: ~/.local/bin)
+  --install-dir <path>     Directory containing assemble-flow (default: ~/.local/bin)
   --skill-dir <path>       Override the destination directory for SKILL.md
   --cli-only               Remove only the CLI
   --skill-only             Remove only the skill pack
@@ -81,17 +81,17 @@ uninstall_homebrew_cli() {
   if ! command -v brew >/dev/null 2>&1; then
     return
   fi
-  if ! brew list --versions batchjob-cli >/dev/null 2>&1; then
+  if ! brew list --versions assemble-flow >/dev/null 2>&1; then
     return
   fi
-  brew uninstall batchjob-cli
-  echo "removed Homebrew formula: batchjob-cli"
+  brew uninstall assemble-flow
+  echo "removed Homebrew formula: assemble-flow"
   removed_any=1
 }
 
 if [[ "$REMOVE_CLI" -eq 1 ]]; then
   uninstall_homebrew_cli
-  cli_path="$INSTALL_DIR/batchjob-cli"
+  cli_path="$INSTALL_DIR/assemble-flow"
   if [[ -f "$cli_path" ]]; then
     rm -f "$cli_path"
     echo "removed: $cli_path"

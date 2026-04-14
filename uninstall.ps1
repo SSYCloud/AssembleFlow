@@ -1,6 +1,6 @@
 param(
   [string]$Agent = "codex",
-  [string]$InstallDir = "$HOME\AppData\Local\Programs\batchjob-cli",
+  [string]$InstallDir = "$HOME\AppData\Local\Programs\assemble-flow",
   [string]$SkillDir = "",
   [switch]$CliOnly,
   [switch]$SkillOnly
@@ -33,11 +33,11 @@ function Uninstall-HomebrewCli {
   $brewCmd = Get-Command brew -ErrorAction SilentlyContinue
   if (-not $brewCmd) { return $false }
 
-  & $brewCmd.Source list --versions batchjob-cli *> $null
+  & $brewCmd.Source list --versions assemble-flow *> $null
   if ($LASTEXITCODE -ne 0) { return $false }
 
-  & $brewCmd.Source uninstall batchjob-cli
-  Write-Host "removed Homebrew formula: batchjob-cli"
+  & $brewCmd.Source uninstall assemble-flow
+  Write-Host "removed Homebrew formula: assemble-flow"
   return $true
 }
 
@@ -45,7 +45,7 @@ if ($removeCli) {
   if (Uninstall-HomebrewCli) {
     $removedAny = $true
   }
-  $cliPath = Join-Path $InstallDir "batchjob-cli.exe"
+  $cliPath = Join-Path $InstallDir "assemble-flow.exe"
   if (Test-Path -LiteralPath $cliPath) {
     Remove-Item -LiteralPath $cliPath -Force
     Write-Host "removed: $cliPath"

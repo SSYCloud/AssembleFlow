@@ -40,7 +40,7 @@ jobs:
         working-directory: cli
         run: |
           mkdir -p ../dist
-          output_path="../dist/batchjob-cli-${{ matrix.goos }}-${{ matrix.goarch }}"
+          output_path="../dist/assemble-flow-${{ matrix.goos }}-${{ matrix.goarch }}"
           if [ "${{ matrix.goos }}" = "windows" ]; then
             output_path="${output_path}.exe"
           fi
@@ -48,12 +48,12 @@ jobs:
             go build \
               -ldflags "-X github.com/SSYCloud/AssembleFlow/cli/internal/version.Version=${{ github.ref_name }}" \
               -o "$output_path" \
-              ./cmd/batchjob-cli
+              ./cmd/assemble-flow
       - name: Upload CLI artifact
         uses: actions/upload-artifact@v4
         with:
-          name: batchjob-cli-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: dist/batchjob-cli-${{ matrix.goos }}-${{ matrix.goarch }}*
+          name: assemble-flow-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: dist/assemble-flow-${{ matrix.goos }}-${{ matrix.goarch }}*
 
   package-assets:
     runs-on: ubuntu-latest
@@ -70,17 +70,17 @@ jobs:
             name="$(basename "$binary")"
             staging="$(mktemp -d)"
             if [[ "$name" == *.exe ]]; then
-              cp "$binary" "$staging/batchjob-cli.exe"
-              (cd "$staging" && zip -q "release.zip" batchjob-cli.exe)
+              cp "$binary" "$staging/assemble-flow.exe"
+              (cd "$staging" && zip -q "release.zip" assemble-flow.exe)
               mv "$staging/release.zip" "release/${name%.exe}.zip"
             else
-              cp "$binary" "$staging/batchjob-cli"
-              tar -C "$staging" -czf "release/${name}.tar.gz" batchjob-cli
+              cp "$binary" "$staging/assemble-flow"
+              tar -C "$staging" -czf "release/${name}.tar.gz" assemble-flow
             fi
             rm -rf "$staging"
-          done < <(find dist -type f -name 'batchjob-cli-*' | sort)
-          tar -czf release/batchjob-skills.tar.gz skills
-          (cd . && zip -qr release/batchjob-skills.zip skills)
+          done < <(find dist -type f -name 'assemble-flow-*' | sort)
+          tar -czf release/assemble-flow-skills.tar.gz skills
+          (cd . && zip -qr release/assemble-flow-skills.zip skills)
           cp install.sh install.ps1 uninstall.sh uninstall.ps1 manifest.json README.md release/
           (cd release && sha256sum * > checksums.txt)
       - name: Upload packaged assets
@@ -100,23 +100,23 @@ jobs:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
           if [ -z "$HOMEBREW_TAP_GITHUB_TOKEN" ]; then
-            echo "HOMEBREW_TAP_GITHUB_TOKEN is required to publish Formula/batchjob-cli.rb" >&2
+            echo "HOMEBREW_TAP_GITHUB_TOKEN is required to publish Formula/assemble-flow.rb" >&2
             exit 1
           fi
 
           tap_dir="$RUNNER_TEMP/homebrew-tap"
           git clone "https://x-access-token:${HOMEBREW_TAP_GITHUB_TOKEN}@github.com/SSYCloud/homebrew-tap.git" "$tap_dir"
-          ./scripts/render-homebrew-formula.sh --tag "$RELEASE_TAG" --checksums release/checksums.txt > "$tap_dir/Formula/batchjob-cli.rb"
+          ./scripts/render-homebrew-formula.sh --tag "$RELEASE_TAG" --checksums release/checksums.txt > "$tap_dir/Formula/assemble-flow.rb"
 
           cd "$tap_dir"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if git diff --quiet -- Formula/batchjob-cli.rb; then
-            echo "Formula/batchjob-cli.rb is already up to date"
+          if git diff --quiet -- Formula/assemble-flow.rb; then
+            echo "Formula/assemble-flow.rb is already up to date"
             exit 0
           fi
 
-          git add Formula/batchjob-cli.rb
-          git commit -m "batchjob-cli ${RELEASE_TAG}"
+          git add Formula/assemble-flow.rb
+          git commit -m "assemble-flow ${RELEASE_TAG}"
           git push origin main

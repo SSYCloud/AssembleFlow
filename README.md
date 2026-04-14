@@ -2,7 +2,7 @@
 
 Public distribution repository for:
 
-- `batchjob-cli`
+- `assemble-flow`
 - agent skill packs for Codex / Claude
 - install scripts
 - examples
@@ -14,20 +14,20 @@ This repository is the public delivery surface for developers and agents to use 
 
 The first public CLI is HTTP-based and focuses on:
 
-- `batchjob-cli doctor`
-- `batchjob-cli input-asset upload <file>`
-- `batchjob-cli model list --step-type image-generate`
-- `batchjob-cli model get <model-id>`
-- `batchjob-cli template list`
-- `batchjob-cli template schema <template-id>`
-- `batchjob-cli template download <template-id>`
-- `batchjob-cli template submit-file <template-id> <xlsx-path>`
-- `batchjob-cli template validate-file <template-id> <xlsx-path>`
-- `batchjob-cli template backfill-results <run-id> <xlsx-path>`
-- `batchjob-cli run submit <template-id> -f rows.jsonl`
-- `batchjob-cli run watch <run-id>`
-- `batchjob-cli artifact list <run-id>`
-- `batchjob-cli artifact download <run-id>`
+- `assemble-flow doctor`
+- `assemble-flow input-asset upload <file>`
+- `assemble-flow model list --step-type image-generate`
+- `assemble-flow model get <model-id>`
+- `assemble-flow template list`
+- `assemble-flow template schema <template-id>`
+- `assemble-flow template download <template-id>`
+- `assemble-flow template submit-file <template-id> <xlsx-path>`
+- `assemble-flow template validate-file <template-id> <xlsx-path>`
+- `assemble-flow template backfill-results <run-id> <xlsx-path>`
+- `assemble-flow run submit <template-id> -f rows.jsonl`
+- `assemble-flow run watch <run-id>`
+- `assemble-flow artifact list <run-id>`
+- `assemble-flow artifact download <run-id>`
 
 Authentication is environment-variable based:
 
@@ -42,7 +42,7 @@ export BATCHJOB_TOKEN="your-token"
 curl -fsSL https://raw.githubusercontent.com/SSYCloud/AssembleFlow/main/install.sh | bash
 ```
 
-By default the installer downloads the latest release, installs `batchjob-cli` into `~/.local/bin`, and installs the Codex skill into `~/.codex/skills/assemble-flow/SKILL.md`.
+By default the installer downloads the latest release, installs `assemble-flow` into `~/.local/bin`, and installs the Codex skill into `~/.codex/skills/assemble-flow/SKILL.md`.
 
 On macOS/Linux, if `brew` is available, the installer prefers Homebrew for the CLI and still installs the matching skill pack. Use `--no-brew` if you want the release binary path instead.
 
@@ -67,13 +67,13 @@ Useful flags:
 & ([scriptblock]::Create((irm https://raw.githubusercontent.com/SSYCloud/AssembleFlow/main/install.ps1))) -Version v0.1.0
 ```
 
-By default the PowerShell installer places `batchjob-cli.exe` under:
+By default the PowerShell installer places `assemble-flow.exe` under:
 
 ```powershell
-$HOME\AppData\Local\Programs\batchjob-cli
+$HOME\AppData\Local\Programs\assemble-flow
 ```
 
-If that directory is not already in `PATH`, add it before using `batchjob-cli`.
+If that directory is not already in `PATH`, add it before using `assemble-flow`.
 
 ## Uninstall
 
@@ -89,7 +89,7 @@ Windows PowerShell:
 irm https://raw.githubusercontent.com/SSYCloud/AssembleFlow/main/uninstall.ps1 | iex
 ```
 
-The uninstall scripts remove the GitHub Release install and, when detected, also uninstall the Homebrew `batchjob-cli` formula so old CLI versions do not stay on your `PATH`.
+The uninstall scripts remove the GitHub Release install and, when detected, also uninstall the Homebrew `assemble-flow` formula so old CLI versions do not stay on your `PATH`.
 
 Useful flags:
 
@@ -108,14 +108,14 @@ curl -fsSL https://raw.githubusercontent.com/SSYCloud/AssembleFlow/main/uninstal
 ## Install With Homebrew
 
 ```bash
-brew install ssycloud/tap/batchjob-cli
+brew install ssycloud/tap/assemble-flow
 ```
 
 Or:
 
 ```bash
 brew tap ssycloud/tap
-brew install batchjob-cli
+brew install assemble-flow
 ```
 
 Direct Homebrew commands install the CLI only. If you also want the Codex or Claude skill pack, use the installer above so the skill is installed too.
@@ -124,7 +124,7 @@ Direct Homebrew commands install the CLI only. If you also want the Codex or Cla
 
 ```bash
 cd cli
-GOWORK=off go build ./cmd/batchjob-cli
+GOWORK=off go build ./cmd/assemble-flow
 ```
 
 ## Quick Start
@@ -133,19 +133,19 @@ GOWORK=off go build ./cmd/batchjob-cli
 export BATCHJOB_SERVER="https://batchjob-test.shengsuanyun.com/batch"
 export BATCHJOB_TOKEN="your-token"
 
-./cli/batchjob-cli doctor
-./cli/batchjob-cli input-asset upload ./local-input.txt
-./cli/batchjob-cli model list --step-type image-generate
-./cli/batchjob-cli model get google/gemini-2.5-flash-image
-./cli/batchjob-cli template list
-./cli/batchjob-cli template schema text-image-v1
-./cli/batchjob-cli template download text-image-v1 --output-file ./text-image-v1.xlsx
-./cli/batchjob-cli template validate-file text-image-v1 ./filled-text-image-v1.xlsx
-./cli/batchjob-cli template submit-file text-image-v1 ./filled-text-image-v1.xlsx
-./cli/batchjob-cli run watch <run-id>
-./cli/batchjob-cli template backfill-results <run-id> ./filled-text-image-v1.xlsx
-./cli/batchjob-cli artifact list <run-id>
-./cli/batchjob-cli artifact download <run-id> --output-dir ./downloads
+./cli/assemble-flow doctor
+./cli/assemble-flow input-asset upload ./local-input.txt
+./cli/assemble-flow model list --step-type image-generate
+./cli/assemble-flow model get google/gemini-2.5-flash-image
+./cli/assemble-flow template list
+./cli/assemble-flow template schema text-image-v1
+./cli/assemble-flow template download text-image-v1 --output-file ./text-image-v1.xlsx
+./cli/assemble-flow template validate-file text-image-v1 ./filled-text-image-v1.xlsx
+./cli/assemble-flow template submit-file text-image-v1 ./filled-text-image-v1.xlsx
+./cli/assemble-flow run watch <run-id>
+./cli/assemble-flow template backfill-results <run-id> ./filled-text-image-v1.xlsx
+./cli/assemble-flow artifact list <run-id>
+./cli/assemble-flow artifact download <run-id> --output-dir ./downloads
 ```
 
 If `template list` returns `no templates`, the target environment likely has not imported official template seed data yet.
@@ -156,9 +156,9 @@ Use model discovery when you need to understand which executable models are curr
 available for one step type:
 
 ```bash
-./cli/batchjob-cli model list --step-type text-generate
-./cli/batchjob-cli model list --step-type image-generate --provider vertex
-./cli/batchjob-cli model get google/gemini-2.5-flash-image
+./cli/assemble-flow model list --step-type text-generate
+./cli/assemble-flow model list --step-type image-generate --provider vertex
+./cli/assemble-flow model get google/gemini-2.5-flash-image
 ```
 
 `model list` is step-type scoped on purpose. Common values are:
@@ -174,8 +174,8 @@ raw file first and keep the returned `input_asset_id` for later structured-input
 assembly:
 
 ```bash
-./cli/batchjob-cli input-asset upload ./runtime/codex-exec.mjs
-./cli/batchjob-cli input-asset upload ./diagram.png --content-type image/png
+./cli/assemble-flow input-asset upload ./runtime/codex-exec.mjs
+./cli/assemble-flow input-asset upload ./diagram.png --content-type image/png
 ```
 
 This command currently covers Phase 1 only:
@@ -191,11 +191,11 @@ It does not yet submit a run by itself.
 For official templates, the default workflow is Excel:
 
 ```bash
-./cli/batchjob-cli template download text-image-v1 --output-file ./text-image-v1.xlsx
-./cli/batchjob-cli template validate-file text-image-v1 ./filled-text-image-v1.xlsx
-./cli/batchjob-cli template submit-file text-image-v1 ./filled-text-image-v1.xlsx
-./cli/batchjob-cli run watch <run-id>
-./cli/batchjob-cli template backfill-results <run-id> ./filled-text-image-v1.xlsx
+./cli/assemble-flow template download text-image-v1 --output-file ./text-image-v1.xlsx
+./cli/assemble-flow template validate-file text-image-v1 ./filled-text-image-v1.xlsx
+./cli/assemble-flow template submit-file text-image-v1 ./filled-text-image-v1.xlsx
+./cli/assemble-flow run watch <run-id>
+./cli/assemble-flow template backfill-results <run-id> ./filled-text-image-v1.xlsx
 ```
 
 `template submit-file` uploads the filled workbook and directly creates a run.

@@ -1,6 +1,6 @@
 param(
   [string]$Agent = "codex",
-  [string]$InstallDir = "$HOME\AppData\Local\Programs\batchjob-cli",
+  [string]$InstallDir = "$HOME\AppData\Local\Programs\assemble-flow",
   [string]$SkillDir = "",
   [string]$Version = "latest"
 )
@@ -23,7 +23,7 @@ function Resolve-SkillDir {
 function Resolve-Tag {
   param([string]$Requested)
   if ($Requested -ne "latest") { return $Requested }
-  $resp = Invoke-RestMethod -Uri "$ApiBase/releases/latest" -Headers @{ Accept = "application/vnd.github+json"; "User-Agent" = "batchjob-cli-installer" }
+  $resp = Invoke-RestMethod -Uri "$ApiBase/releases/latest" -Headers @{ Accept = "application/vnd.github+json"; "User-Agent" = "assemble-flow-installer" }
   if (-not $resp.tag_name) { throw "failed to resolve latest release tag" }
   return [string]$resp.tag_name
 }
@@ -60,8 +60,8 @@ $arch = switch ($env:PROCESSOR_ARCHITECTURE.ToLowerInvariant()) {
 }
 
 $tag = Resolve-Tag -Requested $Version
-$cliAsset = "batchjob-cli-windows-$arch.zip"
-$skillsAsset = "batchjob-skills.zip"
+$cliAsset = "assemble-flow-windows-$arch.zip"
+$skillsAsset = "assemble-flow-skills.zip"
 $checksumsAsset = "checksums.txt"
 $baseUrl = "https://github.com/$Repo/releases/download/$tag"
 
@@ -88,7 +88,7 @@ try {
   $cliExtract = Join-Path $tmpDir "cli"
   Expand-Archive -LiteralPath $cliZip -DestinationPath $cliExtract -Force
   New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
-  Copy-Item -LiteralPath (Join-Path $cliExtract "batchjob-cli.exe") -Destination (Join-Path $InstallDir "batchjob-cli.exe") -Force
+  Copy-Item -LiteralPath (Join-Path $cliExtract "assemble-flow.exe") -Destination (Join-Path $InstallDir "assemble-flow.exe") -Force
 
   Invoke-WebRequest -Uri "$baseUrl/$skillsAsset" -OutFile $skillsZip
   Assert-Checksum -AssetName $skillsAsset -FilePath $skillsZip -ChecksumMap $checksumMap
@@ -100,14 +100,14 @@ try {
   Copy-Item -LiteralPath (Join-Path $skillsExtract "skills\$Agent\assemble-flow\SKILL.md") -Destination (Join-Path $finalSkillDir "SKILL.md") -Force
 
   Write-Host "installed:"
-  Write-Host "  $(Join-Path $InstallDir 'batchjob-cli.exe')"
+  Write-Host "  $(Join-Path $InstallDir 'assemble-flow.exe')"
   Write-Host "  $(Join-Path (Resolve-SkillDir -AgentName $Agent -Override $SkillDir) 'SKILL.md')"
   Write-Host ""
   Write-Host "next:"
   Write-Host "  Add $InstallDir to PATH if needed"
   Write-Host "  `$env:BATCHJOB_SERVER='https://batchjob-test.shengsuanyun.com/batch'"
   Write-Host "  `$env:BATCHJOB_TOKEN='your-token'"
-  Write-Host "  batchjob-cli doctor"
+  Write-Host "  assemble-flow doctor"
 }
 finally {
   if (Test-Path $tmpDir) {

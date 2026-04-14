@@ -55,43 +55,43 @@ checksum_for() {
   printf '%s\n' "$value"
 }
 
-darwin_arm64_sha="$(checksum_for "batchjob-cli-darwin-arm64.tar.gz")"
-darwin_amd64_sha="$(checksum_for "batchjob-cli-darwin-amd64.tar.gz")"
-linux_arm64_sha="$(checksum_for "batchjob-cli-linux-arm64.tar.gz")"
-linux_amd64_sha="$(checksum_for "batchjob-cli-linux-amd64.tar.gz")"
+darwin_arm64_sha="$(checksum_for "assemble-flow-darwin-arm64.tar.gz")"
+darwin_amd64_sha="$(checksum_for "assemble-flow-darwin-amd64.tar.gz")"
+linux_arm64_sha="$(checksum_for "assemble-flow-linux-arm64.tar.gz")"
+linux_amd64_sha="$(checksum_for "assemble-flow-linux-amd64.tar.gz")"
 
 cat <<EOF
-class BatchjobCli < Formula
-  desc "Developer CLI for hosted BatchJob skills"
+class AssembleFlow < Formula
+  desc "Developer CLI for AssembleFlow workflows"
   homepage "https://github.com/SSYCloud/AssembleFlow"
   version "$version"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/SSYCloud/AssembleFlow/releases/download/$tag/batchjob-cli-darwin-arm64.tar.gz"
+      url "https://github.com/SSYCloud/AssembleFlow/releases/download/$tag/assemble-flow-darwin-arm64.tar.gz"
       sha256 "$darwin_arm64_sha"
     else
-      url "https://github.com/SSYCloud/AssembleFlow/releases/download/$tag/batchjob-cli-darwin-amd64.tar.gz"
+      url "https://github.com/SSYCloud/AssembleFlow/releases/download/$tag/assemble-flow-darwin-amd64.tar.gz"
       sha256 "$darwin_amd64_sha"
     end
   end
 
   on_linux do
     if Hardware::CPU.arm?
-      url "https://github.com/SSYCloud/AssembleFlow/releases/download/$tag/batchjob-cli-linux-arm64.tar.gz"
+      url "https://github.com/SSYCloud/AssembleFlow/releases/download/$tag/assemble-flow-linux-arm64.tar.gz"
       sha256 "$linux_arm64_sha"
     else
-      url "https://github.com/SSYCloud/AssembleFlow/releases/download/$tag/batchjob-cli-linux-amd64.tar.gz"
+      url "https://github.com/SSYCloud/AssembleFlow/releases/download/$tag/assemble-flow-linux-amd64.tar.gz"
       sha256 "$linux_amd64_sha"
     end
   end
 
   def install
-    bin.install "batchjob-cli"
+    bin.install "assemble-flow"
   end
 
   test do
-    assert_match "Developer CLI for hosted BatchJob skills", shell_output("#{bin}/batchjob-cli --help")
+    assert_match "Developer CLI for AssembleFlow workflows", shell_output("#{bin}/assemble-flow --help")
   end
 end
 EOF

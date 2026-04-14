@@ -14,7 +14,7 @@ Usage: install.sh [options]
 
 Options:
   --agent <codex|claude>   Install the matching skill pack (default: codex)
-  --install-dir <path>     Directory for batchjob-cli (default: ~/.local/bin)
+  --install-dir <path>     Directory for assemble-flow (default: ~/.local/bin)
   --skill-dir <path>       Override the destination directory for SKILL.md
   --version <tag|latest>   GitHub release tag to install (default: latest)
   --no-brew                Force GitHub Release install even if Homebrew is available
@@ -154,7 +154,7 @@ verify_checksum() {
 }
 
 require_cmd curl
-SKILL_ASSET="batchjob-skills.tar.gz"
+SKILL_ASSET="assemble-flow-skills.tar.gz"
 CHECKSUM_ASSET="checksums.txt"
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
@@ -164,7 +164,7 @@ if can_use_homebrew; then
 else
   require_cmd tar
   TAG="$(resolve_tag)"
-  CLI_ASSET="batchjob-cli-${OS}-${ARCH}.tar.gz"
+  CLI_ASSET="assemble-flow-${OS}-${ARCH}.tar.gz"
   BASE_URL="https://github.com/${REPO}/releases/download/${TAG}"
 fi
 
@@ -181,19 +181,19 @@ echo "skill dir: $(resolve_skill_dir)"
 echo
 
 if can_use_homebrew; then
-  if brew list --versions batchjob-cli >/dev/null 2>&1; then
-    brew upgrade batchjob-cli || true
+  if brew list --versions assemble-flow >/dev/null 2>&1; then
+    brew upgrade assemble-flow || true
   else
-    brew install ssycloud/tap/batchjob-cli
+    brew install ssycloud/tap/assemble-flow
   fi
-  local_cli_path="$INSTALL_DIR/batchjob-cli"
+  local_cli_path="$INSTALL_DIR/assemble-flow"
   if [[ -f "$local_cli_path" ]]; then
     rm -f "$local_cli_path"
     echo "removed shadowing local CLI: $local_cli_path"
   fi
-  CLI_PATH="$(command -v batchjob-cli || true)"
+  CLI_PATH="$(command -v assemble-flow || true)"
   if [[ -z "$CLI_PATH" ]]; then
-    echo "failed to resolve batchjob-cli after Homebrew install" >&2
+    echo "failed to resolve assemble-flow after Homebrew install" >&2
     exit 1
   fi
 else
@@ -204,8 +204,8 @@ else
 
   mkdir -p "$TMP_DIR/cli"
   tar -xzf "$TMP_DIR/$CLI_ASSET" -C "$TMP_DIR/cli"
-  install -m 0755 "$TMP_DIR/cli/batchjob-cli" "$INSTALL_DIR/batchjob-cli"
-  CLI_PATH="$INSTALL_DIR/batchjob-cli"
+  install -m 0755 "$TMP_DIR/cli/assemble-flow" "$INSTALL_DIR/assemble-flow"
+  CLI_PATH="$INSTALL_DIR/assemble-flow"
 fi
 
 [[ -n "${BASE_URL:-}" ]] || BASE_URL="https://github.com/${REPO}/releases/download/$(resolve_tag)"
@@ -229,4 +229,4 @@ echo
 echo "next:"
 echo "  export BATCHJOB_SERVER=https://batchjob-test.shengsuanyun.com/batch"
 echo "  export BATCHJOB_TOKEN=your-token"
-echo "  batchjob-cli doctor"
+echo "  assemble-flow doctor"

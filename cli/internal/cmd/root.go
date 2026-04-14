@@ -25,14 +25,14 @@ func NewRootCmd() *cobra.Command {
 	}
 
 	cmd := &cobra.Command{
-		Use:           "batchjob-cli",
-		Short:         "Developer CLI for hosted BatchJob skills",
+		Use:           "assemble-flow",
+		Short:         "Developer CLI for AssembleFlow workflows",
 		SilenceUsage:  true,
 		SilenceErrors: true,
 		Version:       version.Version,
 	}
 
-	cmd.PersistentFlags().StringVarP(&opts.server, "server", "s", opts.server, "BatchJob base URL or host")
+	cmd.PersistentFlags().StringVarP(&opts.server, "server", "s", opts.server, "AssembleFlow base URL or host")
 	cmd.PersistentFlags().StringVarP(&opts.token, "token", "t", opts.token, "Bearer token")
 	cmd.PersistentFlags().DurationVar(&opts.timeout, "timeout", opts.timeout, "HTTP timeout")
 	cmd.PersistentFlags().StringVarP(&opts.output, "output", "o", opts.output, "Output format: text|json")

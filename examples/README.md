@@ -8,6 +8,6 @@ These are starter inputs for hosted BatchJob templates.
 Use them with:
 
 ```bash
-./cli/batchjob-cli run submit text-image-v1 -f examples/text-image-v1.input.jsonl
-./cli/batchjob-cli run submit text-image-video-v1 -f examples/text-image-video-v1.input.jsonl
+./cli/assemble-flow run submit text-image-v1 -f examples/text-image-v1.input.jsonl
+./cli/assemble-flow run submit text-image-video-v1 -f examples/text-image-video-v1.input.jsonl
 ```
