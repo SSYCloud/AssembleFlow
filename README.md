@@ -101,7 +101,7 @@ export BATCHJOB_SERVER="https://batchjob-test.shengsuanyun.com/batch"
 export BATCHJOB_TOKEN="your-token"
 ```
 
-> 建议写入 `~/.zshrc` 或 `~/.bashrc`，避免每次重新设置。Token 请在胜算云官网申请。
+> 建议写入 `~/.zshrc` 或 `~/.bashrc`，避免每次重新设置。Token 请在胜算云官网申请（[https://console.shengsuanyun.com/user/keys](https://console.shengsuanyun.com/user/keys)）。
 
 
 ---
