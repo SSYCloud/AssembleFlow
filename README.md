@@ -97,11 +97,11 @@ brew install ssycloud/tap/loomloom
 ## 🔑 配置 Token
 
 ```bash
-export BATCHJOB_SERVER="https://batchjob-test.shengsuanyun.com/batch"
-export BATCHJOB_TOKEN="your-token"
+export LOOMLOOM_SERVER="https://batchjob-test.shengsuanyun.com/batch"
+export LOOMLOOM_TOKEN="your-token"
 ```
 
-> 建议写入 `~/.zshrc` 或 `~/.bashrc`，避免每次重新设置。Token 请在胜算云官网申请（[https://console.shengsuanyun.com/user/keys](https://console.shengsuanyun.com/user/keys)）。
+> 建议写入 `~/.zshrc` 或 `~/.bashrc`，避免每次重新设置。CLI 仍兼容旧的 `BATCHJOB_SERVER` / `BATCHJOB_TOKEN`，但新配置建议统一使用 `LOOMLOOM_*`。Token 请在胜算云官网申请（[https://console.shengsuanyun.com/user/keys](https://console.shengsuanyun.com/user/keys)）。
 
 
 ---

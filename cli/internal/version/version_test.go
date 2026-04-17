@@ -33,6 +33,7 @@ func TestCheckLatest(t *testing.T) {
 	origVersion := Version
 	t.Cleanup(func() {
 		Version = origVersion
+		_ = os.Unsetenv("LOOMLOOM_CLI_RELEASE_API")
 		_ = os.Unsetenv("BATCHJOB_CLI_RELEASE_API")
 	})
 	Version = "v0.1.4"
@@ -42,7 +43,7 @@ func TestCheckLatest(t *testing.T) {
 		_, _ = w.Write([]byte(`{"tag_name":"v0.1.5"}`))
 	}))
 	defer server.Close()
-	_ = os.Setenv("BATCHJOB_CLI_RELEASE_API", server.URL)
+	_ = os.Setenv("LOOMLOOM_CLI_RELEASE_API", server.URL)
 
 	status, err := CheckLatest(context.Background())
 	if err != nil {

@@ -18,8 +18,8 @@ Use this skill when the user is referring to our LoomLoom-hosted batch-processin
 ## First Steps
 
 1. Ensure:
-   `BATCHJOB_SERVER`
-   `BATCHJOB_TOKEN`
+   `LOOMLOOM_SERVER`
+   `LOOMLOOM_TOKEN`
 2. Run:
    `loomloom doctor`
 3. Upload reusable raw input files when the local file is large and should not be pasted into agent context:

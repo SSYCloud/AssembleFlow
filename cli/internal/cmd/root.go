@@ -18,8 +18,8 @@ type rootOptions struct {
 
 func NewRootCmd() *cobra.Command {
 	opts := &rootOptions{
-		server:  envOrDefault("BATCHJOB_SERVER", "http://127.0.0.1:8080"),
-		token:   os.Getenv("BATCHJOB_TOKEN"),
+		server:  envOrDefault("LOOMLOOM_SERVER", envOrDefault("BATCHJOB_SERVER", "http://127.0.0.1:8080")),
+		token:   envOrDefault("LOOMLOOM_TOKEN", os.Getenv("BATCHJOB_TOKEN")),
 		timeout: 30 * time.Second,
 		output:  "text",
 	}

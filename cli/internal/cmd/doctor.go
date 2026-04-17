@@ -58,7 +58,7 @@ func newDoctorCmd(opts *rootOptions) *cobra.Command {
 					"update_available":    updateAvailable,
 					"upgrade_hint":        upgradeHint,
 					"version_check_error": versionCheckError,
-					"base_usage":          "set BATCHJOB_SERVER and BATCHJOB_TOKEN before running template commands",
+					"base_usage":          "set LOOMLOOM_SERVER and LOOMLOOM_TOKEN before running template commands",
 				}
 				enc := json.NewEncoder(cmd.OutOrStdout())
 				enc.SetIndent("", "  ")

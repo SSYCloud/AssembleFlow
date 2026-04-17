@@ -106,8 +106,8 @@ try {
   Write-Host ""
   Write-Host "next:"
   Write-Host "  Add $InstallDir to PATH if needed"
-  Write-Host "  `$env:BATCHJOB_SERVER='https://batchjob-test.shengsuanyun.com/batch'"
-  Write-Host "  `$env:BATCHJOB_TOKEN='your-token'"
+  Write-Host "  `$env:LOOMLOOM_SERVER='https://batchjob-test.shengsuanyun.com/batch'"
+  Write-Host "  `$env:LOOMLOOM_TOKEN='your-token'"
   Write-Host "  loomloom doctor"
 }
 finally {

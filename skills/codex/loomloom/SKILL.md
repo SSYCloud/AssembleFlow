@@ -19,7 +19,7 @@ Use this skill when the user is referring to our LoomLoom-hosted batch-processin
 
 - The user only needs a single immediate generation in chat.
 - The task is exploratory and not yet structured enough for batch input.
-- `BATCHJOB_SERVER` or `BATCHJOB_TOKEN` is not configured and the user does not want setup help.
+- `LOOMLOOM_SERVER` or `LOOMLOOM_TOKEN` is not configured and the user does not want setup help.
 
 ## Command Pattern
 

@@ -60,6 +60,9 @@ func CheckLatest(ctx context.Context) (*Status, error) {
 }
 
 func releaseAPIURL() string {
+	if v := strings.TrimSpace(os.Getenv("LOOMLOOM_CLI_RELEASE_API")); v != "" {
+		return v
+	}
 	if v := strings.TrimSpace(os.Getenv("BATCHJOB_CLI_RELEASE_API")); v != "" {
 		return v
 	}

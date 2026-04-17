@@ -230,6 +230,6 @@ echo "  $CLI_PATH"
 echo "  $(resolve_skill_dir)/SKILL.md"
 echo
 echo "next:"
-echo "  export BATCHJOB_SERVER=https://batchjob-test.shengsuanyun.com/batch"
-echo "  export BATCHJOB_TOKEN=your-token"
+echo "  export LOOMLOOM_SERVER=https://batchjob-test.shengsuanyun.com/batch"
+echo "  export LOOMLOOM_TOKEN=your-token"
 echo "  loomloom doctor"
