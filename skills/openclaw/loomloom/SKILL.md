@@ -34,6 +34,7 @@ Use this skill when the user is referring to our LoomLoom-hosted batch-processin
 5. Inspect one template:
    `loomloom template schema <template-id>`
 6. For agent-authored custom templates, use TemplateSpec JSON:
+   `loomloom template-spec models <text-generate|image-generate|video-generate>`
    `loomloom template-spec check <spec.json>`
    `loomloom template-spec create <spec.json>`
    `loomloom template-spec download-workbook <template-id> <version-id>`
@@ -131,6 +132,7 @@ The public CLI MVP currently supports:
 - `loomloom template validate-file <template-id> <xlsx-path>`
 - `loomloom template submit-file <template-id> <xlsx-path>`
 - `loomloom template-spec check <spec.json>`
+- `loomloom template-spec models <text-generate|image-generate|video-generate>`
 - `loomloom template-spec create <spec.json>`
 - `loomloom template-spec download-workbook <template-id> <version-id>`
 - `loomloom template-spec validate-workbook <template-id> <version-id> <xlsx-path>`
@@ -165,7 +167,7 @@ compatible after the template version changes; download a fresh workbook instead
 TemplateSpec authoring guardrails:
 
 - Use `text-generate`, `image-generate`, or `video-generate` execution units unless the user has a documented custom unit.
-- Use canonical model IDs in `DefaultModelRef.ModelKey`.
+- Before choosing `DefaultModelRef.ModelKey`, run `loomloom template-spec models <execution-unit>` and use one of the returned `model_id` values.
 - Only expose a model column when the step has `AllowModelOverride=true` and a field binding to `ParamKey=model`.
 - Do not bind `provider` or `mode`; these routing controls are not exposed through templates.
 

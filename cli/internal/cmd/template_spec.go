@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -39,6 +40,22 @@ type submitUserTemplateWorkbookResponse struct {
 	AcceptedAt flexInt64 `json:"acceptedAt"`
 }
 
+type listModelsResponse struct {
+	Models []modelSummary `json:"models"`
+}
+
+type modelSummary struct {
+	ModelID            string   `json:"modelId"`
+	DisplayName        string   `json:"displayName"`
+	Provider           string   `json:"provider"`
+	ExecutionAdapter   string   `json:"executionAdapter"`
+	SupportedStepTypes []string `json:"supportedStepTypes"`
+	SupportedAPIs      []string `json:"supportedApis"`
+	Available          bool     `json:"available"`
+	AvailabilityReason string   `json:"availabilityReason"`
+	IsDefault          bool     `json:"isDefault"`
+}
+
 type templateSpecMeta struct {
 	Name        string `json:"Name"`
 	Description string `json:"Description"`
@@ -58,6 +75,7 @@ func newTemplateSpecCmd(opts *rootOptions) *cobra.Command {
 	}
 	cmd.AddCommand(
 		newTemplateSpecCheckCmd(opts),
+		newTemplateSpecModelsCmd(opts),
 		newTemplateSpecCreateCmd(opts),
 		newTemplateSpecDownloadWorkbookCmd(opts),
 		newTemplateSpecValidateWorkbookCmd(opts),
@@ -100,6 +118,50 @@ func newTemplateSpecCheckCmd(opts *rootOptions) *cobra.Command {
 			return err
 		},
 	}
+}
+
+func newTemplateSpecModelsCmd(opts *rootOptions) *cobra.Command {
+	var provider string
+	var includeUnavailable bool
+
+	cmd := &cobra.Command{
+		Use:   "models <step-type>",
+		Short: "List executable models available for a TemplateSpec step type",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			stepType := strings.TrimSpace(args[0])
+			if stepType == "" {
+				return errors.New("step-type is required")
+			}
+			httpClient, err := newHTTPClient(opts)
+			if err != nil {
+				return err
+			}
+			ctx, cancel := context.WithTimeout(cmd.Context(), opts.timeout)
+			defer cancel()
+
+			query := url.Values{}
+			query.Set("stepType", stepType)
+			query.Set("onlyAvailable", fmt.Sprintf("%t", !includeUnavailable))
+			if strings.TrimSpace(provider) != "" {
+				query.Set("provider", strings.TrimSpace(provider))
+			}
+
+			var resp listModelsResponse
+			if err := httpClient.GetJSONWithQuery(ctx, "/v1/batch/models", query, &resp); err != nil {
+				return err
+			}
+			if opts.output == "json" {
+				enc := json.NewEncoder(cmd.OutOrStdout())
+				enc.SetIndent("", "  ")
+				return enc.Encode(resp)
+			}
+			return printTemplateSpecModels(cmd.OutOrStdout(), resp.Models)
+		},
+	}
+	cmd.Flags().StringVar(&provider, "provider", "vertex", "Model provider filter")
+	cmd.Flags().BoolVar(&includeUnavailable, "include-unavailable", false, "Include known but currently unavailable models")
+	return cmd
 }
 
 func newTemplateSpecCreateCmd(opts *rootOptions) *cobra.Command {
@@ -396,4 +458,36 @@ func firstNonEmpty(values ...string) string {
 		}
 	}
 	return ""
+}
+
+func printTemplateSpecModels(w interface {
+	Write([]byte) (int, error)
+}, models []modelSummary) error {
+	if len(models) == 0 {
+		_, err := fmt.Fprintln(w, "no models")
+		return err
+	}
+	tw := newTabWriter(w)
+	if _, err := fmt.Fprintln(tw, "model_id\tdisplay_name\tprovider\tdefault\tavailable\treason"); err != nil {
+		return err
+	}
+	for _, model := range models {
+		reason := model.AvailabilityReason
+		if reason == "" {
+			reason = "-"
+		}
+		if _, err := fmt.Fprintf(
+			tw,
+			"%s\t%s\t%s\t%t\t%t\t%s\n",
+			model.ModelID,
+			model.DisplayName,
+			model.Provider,
+			model.IsDefault,
+			model.Available,
+			reason,
+		); err != nil {
+			return err
+		}
+	}
+	return tw.Flush()
 }
