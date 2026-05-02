@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -134,5 +135,52 @@ func TestTemplateSpecModelsCmdCanIncludeUnavailableModels(t *testing.T) {
 	}
 	if !strings.Contains(out.String(), `"models": []`) {
 		t.Fatalf("json output missing models array: %s", out.String())
+	}
+}
+
+func TestTemplateSpecSubmitWorkbookSendsFilename(t *testing.T) {
+	workbookPath := filepath.Join(t.TempDir(), "custom-input.xlsx")
+	if err := os.WriteFile(workbookPath, []byte("xlsx bytes"), 0o644); err != nil {
+		t.Fatalf("write workbook: %v", err)
+	}
+
+	var submitFilename string
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var payload map[string]any
+		if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+			t.Fatalf("decode request: %v", err)
+		}
+		switch r.URL.Path {
+		case "/v1/batch/user-template-workbook:validate":
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"valid":true}`))
+		case "/v1/batch/user-template-workbook:submit":
+			submitFilename, _ = payload["filename"].(string)
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"runId":"run_123","status":"pending","acceptedAt":"1777699967"}`))
+		default:
+			t.Fatalf("unexpected path: %s", r.URL.Path)
+		}
+	}))
+	defer server.Close()
+
+	opts := &rootOptions{
+		server:  server.URL,
+		timeout: time.Second,
+		output:  "json",
+	}
+	cmd := newTemplateSpecSubmitWorkbookCmd(opts)
+	var out bytes.Buffer
+	cmd.SetOut(&out)
+	cmd.SetArgs([]string{"tmpl_123", "ver_123", workbookPath})
+
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("submit-workbook command error = %v", err)
+	}
+	if submitFilename != "custom-input.xlsx" {
+		t.Fatalf("filename=%q want custom-input.xlsx", submitFilename)
+	}
+	if !strings.Contains(out.String(), `"runId": "run_123"`) {
+		t.Fatalf("output missing run id: %s", out.String())
 	}
 }

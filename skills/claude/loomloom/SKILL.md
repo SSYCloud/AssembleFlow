@@ -41,12 +41,16 @@ Use this skill when the user is referring to our LoomLoom-hosted batch-processin
    `loomloom template download <template-id>`
    `loomloom template validate-file <template-id> <xlsx-path>`
    `loomloom template submit-file <template-id> <xlsx-path>`
-   `loomloom template backfill-results <run-id> <xlsx-path>`
+   `loomloom run result-workbook <run-id>`
+   Use `loomloom template backfill-results <run-id> <xlsx-path>` only for the legacy local backfill flow.
 8. Use JSON/JSONL only when the user explicitly wants a programmatic non-Excel path:
    `loomloom run submit <template-id> -f rows.jsonl`
 9. Watch the run:
    `loomloom run watch <run-id>`
-10. Download outputs when ready:
+10. Inspect or download aligned run results:
+   `loomloom run result-rows <run-id>`
+   `loomloom run result-workbook <run-id>`
+11. Download outputs when ready:
    `loomloom artifact download <run-id>`
 
 ## Confirmation Rule
@@ -122,7 +126,8 @@ The first public CLI release covers:
 - raw input asset upload
 - executable model discovery
 - template discovery
-- official template Excel download / validation / submission / result backfill
+- official template Excel download / validation / submission / server result workbook
+- server-side result rows and result workbook downloads
 - TemplateSpec JSON custom template creation / workbook download / workbook validation / workbook submission
 - executable model discovery for TemplateSpec authoring
 - official template row submission
@@ -164,11 +169,12 @@ When using:
 
 - `loomloom template submit-file <template-id> <xlsx-path>`
 - `loomloom template-spec submit-workbook <template-id> <version-id> <xlsx-path>`
-- `loomloom template backfill-results <run-id> <xlsx-path>`
+- `loomloom run result-workbook <run-id>`
 
-assume the workbook itself is the source of truth. By default, `template backfill-results`
-writes results back into the same workbook path. Only use `--output-file` when the
-user explicitly wants a separate workbook copy.
+assume the submitted workbook and the server-side run input snapshot are the source of truth.
+Prefer `run result-workbook` after a run completes because the server joins the original
+input snapshot with the produced artifacts. Use `template backfill-results` only when the
+user explicitly needs the older local Excel backfill behavior.
 
 ## 控制台访问
 

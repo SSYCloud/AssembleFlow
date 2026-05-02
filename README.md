@@ -147,12 +147,14 @@ loomloom template submit-file text-image-v1 ./task.xlsx
 # 4. 监控进度（获取 run-id 后执行）
 loomloom run watch <run-id>
 
-# 5. 结果回写到 Excel
-loomloom template backfill-results <run-id> ./task.xlsx
+# 5. 下载服务端生成的结果 Excel（保留原始输入并追加结果列）
+loomloom run result-workbook <run-id> --output-file ./task.result.xlsx
 
 # 6. 下载生成文件
 loomloom artifact download <run-id> --output-dir ./downloads
 ```
+
+> `template backfill-results` 仍可用于本地旧流程；新后端优先推荐 `run result-workbook`，由服务端基于提交时保存的输入快照生成结果表，避免本地 Excel 与 run 结果对不齐。
 
 ---
 
@@ -228,7 +230,9 @@ loomloom input-asset upload ./diagram.png --content-type image/png
 | `loomloom template download <id>` | 下载 Excel 模板 |
 | `loomloom template validate-file <id> <xlsx>` | 校验 Excel 填写格式 |
 | `loomloom template submit-file <id> <xlsx>` | 提交任务 |
-| `loomloom template backfill-results <run-id> <xlsx>` | 结果回写到 Excel |
+| `loomloom run result-rows <run-id>` | 查看服务端对齐后的输入行和结果 |
+| `loomloom run result-workbook <run-id>` | 下载服务端生成的结果 Excel |
+| `loomloom template backfill-results <run-id> <xlsx>` | 本地旧流程：结果回写到指定 Excel |
 | `loomloom run submit <id> -f rows.jsonl` | 高级：JSONL 方式提交 |
 | `loomloom run watch <run-id>` | 监控任务进度 |
 | `loomloom artifact list <run-id>` | 查看生成文件列表 |

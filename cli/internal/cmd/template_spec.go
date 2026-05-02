@@ -550,6 +550,7 @@ func postUserTemplateWorkbook[T any](ctx context.Context, opts *rootOptions, tem
 		"templateId": strings.TrimSpace(templateID),
 		"versionId":  strings.TrimSpace(versionID),
 		"content":    content,
+		"filename":   filepath.Base(workbookPath),
 	}
 	for key, value := range extra {
 		payload[key] = value
