@@ -58,6 +58,7 @@ jobs:
   package-assets:
     runs-on: ubuntu-latest
     needs: build-cli
+    environment: release
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -81,20 +82,73 @@ jobs:
           done < <(find dist -type f -name 'loomloom-*' | sort)
           tar -czf release/loomloom-skills.tar.gz skills
           (cd . && zip -qr release/loomloom-skills.zip skills)
-          cp install.sh install.ps1 uninstall.sh uninstall.ps1 manifest.json README.md release/
+          for arch in amd64 arm64; do
+            binary="dist/loomloom-linux-${arch}/loomloom-linux-${arch}"
+            if [ ! -f "$binary" ]; then
+              echo "missing OpenClaw bundle binary: $binary" >&2
+              exit 1
+            fi
+            staging="$(mktemp -d)"
+            mkdir -p "$staging/bin" "$staging/skills/loomloom"
+            cp "$binary" "$staging/bin/loomloom"
+            chmod 0755 "$staging/bin/loomloom"
+            cp skills/openclaw/loomloom/SKILL.md "$staging/skills/loomloom/SKILL.md"
+            cp install-openclaw.sh README.md manifest.json "$staging/"
+            tar -C "$staging" -czf "release/loomloom-openclaw-linux-${arch}.tar.gz" .
+            rm -rf "$staging"
+          done
+          cp install.sh install-openclaw.sh install.ps1 uninstall.sh uninstall.ps1 manifest.json README.md release/
           (cd release && sha256sum * > checksums.txt)
       - name: Upload packaged assets
         uses: actions/upload-artifact@v4
         with:
           name: release-assets
           path: release/*
+      - name: Classify release channel
+        id: release_channel
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          if [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-(beta|rc|internal)\.[0-9]+$ ]]; then
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+            echo "make_latest=false" >> "$GITHUB_OUTPUT"
+            echo "homebrew=false" >> "$GITHUB_OUTPUT"
+            echo "release channel: prerelease"
+          elif [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+            echo "make_latest=true" >> "$GITHUB_OUTPUT"
+            echo "homebrew=true" >> "$GITHUB_OUTPUT"
+            echo "release channel: stable"
+          else
+            echo "unsupported release tag: $tag" >&2
+            echo "expected vX.Y.Z or vX.Y.Z-beta.N / vX.Y.Z-rc.N / vX.Y.Z-internal.N" >&2
+            exit 1
+          fi
       - name: Publish GitHub release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: release/*
-      - name: Update Homebrew tap
+          prerelease: ${{ steps.release_channel.outputs.prerelease }}
+          make_latest: ${{ steps.release_channel.outputs.make_latest }}
+      - name: Install ossutil
         if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          curl -fsSL https://gosspublic.alicdn.com/ossutil/install.sh | sudo bash
+          ossutil --version
+      - name: Publish OSS mirror
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          OSS_ACCESS_KEY_ID: ${{ secrets.OSS_ACCESS_KEY_ID }}
+          OSS_ACCESS_KEY_SECRET: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
+          OSS_ENDPOINT: ${{ secrets.OSS_ENDPOINT }}
+          OSS_BUCKET: ${{ secrets.OSS_BUCKET }}
+          OSS_PREFIX: ${{ vars.OSS_PREFIX || 'loomloom/releases' }}
+          OSS_PUBLIC_BASE_URL: ${{ vars.OSS_PUBLIC_BASE_URL }}
+        run: |
+          ./scripts/upload-oss-release.sh release "$GITHUB_REF_NAME"
+      - name: Update Homebrew tap
+        if: startsWith(github.ref, 'refs/tags/v') && steps.release_channel.outputs.homebrew == 'true'
         env:
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
           RELEASE_TAG: ${{ github.ref_name }}
