@@ -17,8 +17,6 @@ VERSION="$2"
 
 OSS_PREFIX="${OSS_PREFIX:-loomloom/releases}"
 OSSUTIL_BIN="${OSSUTIL_BIN:-ossutil}"
-OSS_ENDPOINT="${OSS_ENDPOINT#https://}"
-OSS_ENDPOINT="${OSS_ENDPOINT#http://}"
 OSS_TARGET="oss://${OSS_BUCKET}/${OSS_PREFIX%/}/${VERSION}"
 OSS_LATEST_TARGET="oss://${OSS_BUCKET}/${OSS_PREFIX%/}/latest"
 PUBLIC_BASE_URL="${OSS_PUBLIC_BASE_URL%/}/${OSS_PREFIX%/}"
@@ -46,11 +44,7 @@ ossutil() {
 }
 
 echo "uploading LoomLoom release assets to $OSS_TARGET"
-while IFS= read -r file; do
-  name="$(basename "$file")"
-  echo "uploading $name"
-  ossutil cp "$file" "$OSS_TARGET/$name" --update
-done < <(find "$RELEASE_DIR" -maxdepth 1 -type f | sort)
+ossutil cp -r "$RELEASE_DIR/" "$OSS_TARGET/" --update
 
 echo "updating latest OpenClaw installer and manifest at $OSS_LATEST_TARGET"
 ossutil cp "$RELEASE_DIR/manifest.oss.json" "$OSS_LATEST_TARGET/manifest.json" --update
