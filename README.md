@@ -65,40 +65,6 @@ curl -fsSL https://raw.githubusercontent.com/SSYCloud/loomloom/main/install.sh |
 
 > 如果系统有 Homebrew，安装脚本会优先使用 Homebrew 安装 CLI；可加 `--no-brew` 改用二进制包。
 
-**OpenClaw 云端环境（推荐）：**
-
-OpenClaw 云端环境建议优先使用胜算云镜像安装源，避免 GitHub Release 下载慢、超时或被中断：
-
-```bash
-curl -fsSL https://install.shengsuanyun.com/loomloom/releases/latest/install-openclaw.sh | bash
-```
-
-如果需要安装指定版本：
-
-```bash
-curl -fsSL https://install.shengsuanyun.com/loomloom/releases/latest/install-openclaw.sh | bash -s -- --version v0.1.0
-```
-
-OpenClaw 安装脚本会默认安装：
-
-| 内容 | 默认路径 |
-| --- | --- |
-| CLI | `~/.local/bin/loomloom` |
-| OpenClaw skill | `~/.openclaw/workspace/skills/loomloom/SKILL.md` |
-
-安装脚本会优先从胜算云镜像源下载，并在镜像源不可用时 fallback 到 GitHub Release。若云端网络无法访问 GitHub，可加 `--no-github-fallback`，让失败原因更明确：
-
-```bash
-curl -fsSL https://install.shengsuanyun.com/loomloom/releases/latest/install-openclaw.sh | bash -s -- --no-github-fallback
-```
-
-如果 OpenClaw 云端无法稳定访问公网，请使用 release 中的离线包 `loomloom-openclaw-linux-amd64.tar.gz` 或 `loomloom-openclaw-linux-arm64.tar.gz`。上传并解压后执行：
-
-```bash
-tar -xzf loomloom-openclaw-linux-amd64.tar.gz
-./install-openclaw.sh
-```
-
 **Windows（PowerShell）：**
 
 ```powershell
@@ -132,33 +98,6 @@ export LOOMLOOM_TOKEN="your-token"
 ```
 
 > 建议写入 `~/.zshrc` 或 `~/.bashrc`，避免每次重新设置。CLI 仍兼容旧的 `BATCHJOB_SERVER` / `BATCHJOB_TOKEN`，但新配置建议统一使用 `LOOMLOOM_*`。Token 请在胜算云官网申请（[https://console.shengsuanyun.com/user/keys](https://console.shengsuanyun.com/user/keys)）。
-
-## 🚀 Release 分发说明
-
-LoomLoom 的 release 产物仍由 GitHub Actions 统一构建，并发布到 GitHub Release。为了支持 OpenClaw 云端弱网环境，同一批 release 产物会同步上传到胜算云 OSS/CDN 镜像源。
-
-发布链路：
-
-```text
-push tag vX.Y.Z
-  → GitHub Actions 构建 CLI / skills / OpenClaw 离线包
-  → 上传 GitHub Release
-  → 上传胜算云 OSS/CDN
-  → 更新 releases/latest/install-openclaw.sh 和 releases/latest/manifest.json
-```
-
-GitHub Actions 需要在 `release` environment 中配置以下 secrets / variables：
-
-| 名称 | 类型 | 说明 |
-| --- | --- | --- |
-| `OSS_ACCESS_KEY_ID` | secret | OSS 子账号 AccessKey ID |
-| `OSS_ACCESS_KEY_SECRET` | secret | OSS 子账号 AccessKey Secret |
-| `OSS_ENDPOINT` | secret | OSS endpoint，例如 `oss-cn-hangzhou.aliyuncs.com` |
-| `OSS_BUCKET` | secret | OSS bucket 名称 |
-| `OSS_PUBLIC_BASE_URL` | variable | CDN 或 bucket 公网根地址，例如 `https://install.shengsuanyun.com` |
-| `OSS_PREFIX` | variable | 发布路径，默认 `loomloom/releases` |
-
-建议 OSS 子账号只授予 `loomloom/releases/*` 路径的写入权限，并在 GitHub Environment 上开启 release 审批，避免凭证被非 release workflow 使用。
 
 ---
 
